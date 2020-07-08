@@ -18,7 +18,7 @@ class UsuariosList(APIView):
         serializer = UsuariosSerializer(users, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
-class UsuariosCreate(APIView):
+class UsuariosC(APIView):
     serializer_class = UsuariosSerializer
 
     def post(self, request, format=None):
@@ -30,16 +30,13 @@ class UsuariosCreate(APIView):
         else:
             return Response({"messagem": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-class UsuariosRead(APIView):
+class UsuariosRUD(APIView):
     serializer_class = UsuariosSerializer
     
     def get(self, request, pk):
         users = Usuarios.objects.get(pk=pk)
         serializer = self.serializer_class(users)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-class UsuariosUpdate(APIView):
-    serializer_class = UsuariosSerializer
 
     def put(self, request, pk, format=None):
         users = Usuarios.objects.get(pk=pk)
@@ -49,9 +46,6 @@ class UsuariosUpdate(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UsuariosDelete(APIView):
-    serializer_class = UsuariosSerializer
-
     def delete(self, request, pk, format=None):
         try:
             users = Usuarios.objects.get(pk=pk)
@@ -59,6 +53,7 @@ class UsuariosDelete(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as message:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 ##--------------- Produtos ---------------##
 
@@ -70,7 +65,7 @@ class ProdutosList(APIView):
         serializer = ProdutosSerializer(produtos, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-class ProdutosCreate(APIView):
+class ProdutosC(APIView):
     serializer_class = ProdutosSerializer
     
     def post(self, request, format=None):
@@ -82,7 +77,7 @@ class ProdutosCreate(APIView):
         else:
             return Response({"messagem": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-class ProdutosRead(APIView):
+class ProdutosRUD(APIView):
     serializer_class = ProdutosSerializer
     
     def get(self, request, pk):
@@ -90,9 +85,6 @@ class ProdutosRead(APIView):
         serializer = self.serializer_class(produtos)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-class ProdutosUpdate(APIView):
-    serializer_class = ProdutosSerializer
-    
     def put(self, request, pk, format=None):
         produtos = Produtos.objects.get(pk=pk)
         serializer = self.serializer_class(produtos, data=request.data)
@@ -100,9 +92,6 @@ class ProdutosUpdate(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class ProdutosDelete(APIView):
-    serializer_class = ProdutosSerializer
     
     def delete(self, request, pk, format=None):
         try:
@@ -128,8 +117,6 @@ class DescontoCalc(APIView):
         }
 
         return Response(data=data, status=status.HTTP_200_OK)
-
-##--------------- Métodos ---------------##
 
 def desconto_birthday(pkU):
     user = Usuarios.objects.get(pk=pkU)
