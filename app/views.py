@@ -120,11 +120,6 @@ class ProdutosDisc(APIView):
             r_list.append(produto_final)
 
         return Response(data=r_list, status=status.HTTP_200_OK)
-"""
-        
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-"""
-
 
 """
 ##--------------- Descontos ---------------##
