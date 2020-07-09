@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
 from datetime import date
+import requests
+from collections import OrderedDict
 
 
 ##--------------- Usuários ---------------##
@@ -54,7 +56,6 @@ class UsuariosRUD(APIView):
         except Exception as message:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-
 ##--------------- Produtos ---------------##
 
 class ProdutosList(APIView):
@@ -101,8 +102,33 @@ class ProdutosRUD(APIView):
         except Exception as message:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-##--------------- Descontos ---------------##
+class ProdutosDisc(APIView):
+    serializer_class = ProdutosSerializer
 
+    def get(self, request, pk, format=None):
+        produtos = Produtos.objects.all()
+        serializer = ProdutosSerializer(produtos, many=True)
+
+        pkP_list = [i['id'] for i in serializer.data]
+        print(pkP_list)
+
+        r_list = []
+        for pkP in pkP_list: 
+            r = requests.get(f'http://localhost:3000/api/discounts/{pkP}/{pk}').json()
+            produto = list(produtos.filter(pk=pkP).values())
+            produto.append(r)
+            produto_final = OrderedDict(produto[0], **produto[1])
+            r_list.append(produto_final)
+
+        return Response(data=r_list, status=status.HTTP_200_OK)
+"""
+        
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+"""
+
+
+"""
+##--------------- Descontos ---------------##
 class DescontoCalc(APIView):
 
     def get(self, request, pkP, pkU):
@@ -150,3 +176,4 @@ def preco_descontado(pkP, discount):
     preco_total = produto.price
 
     return preco_total*(100 - discount)/100
+"""

@@ -8,7 +8,7 @@ class Produtos(models.Model):
     base_discount_percent = models.FloatField()
 
     class Meta:
-        db_table = 'Produtos'
+        db_table = 'produtos'
         
         constraints = [
             models.CheckConstraint(check=models.Q(base_discount_percent__lte=25.0), name='base_discount_max')
@@ -27,7 +27,7 @@ class Usuarios(models.Model):
     birthdate = models.DateField()
 
     class Meta:
-        db_table = 'Usuarios'
+        db_table = 'usuarios'
     
 
     def __str__(self):
