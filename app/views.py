@@ -110,7 +110,6 @@ class ProdutosDisc(APIView):
         serializer = ProdutosSerializer(produtos, many=True)
 
         pkP_list = [i['id'] for i in serializer.data]
-        print(pkP_list)
 
         r_list = []
         for pkP in pkP_list: 
