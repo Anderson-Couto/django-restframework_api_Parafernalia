@@ -4,6 +4,8 @@ from .serializers import ProdutosSerializer, UsuariosSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.db import IntegrityError
+from requests.exceptions import ConnectionError
 import json
 from datetime import date
 import requests
@@ -70,13 +72,17 @@ class ProdutosC(APIView):
     serializer_class = ProdutosSerializer
     
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
+        try:
+            serializer = self.serializer_class(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"messagem": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"messagem": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            content = {'error': 'Desconto base acima do permitido(25%). Tente novamente com um valor válido.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 class ProdutosRUD(APIView):
     serializer_class = ProdutosSerializer
@@ -106,20 +112,25 @@ class ProdutosDisc(APIView):
     serializer_class = ProdutosSerializer
 
     def get(self, request, pk, format=None):
-        produtos = Produtos.objects.all()
-        serializer = ProdutosSerializer(produtos, many=True)
+        try:
+            produtos = Produtos.objects.all()
+            serializer = ProdutosSerializer(produtos, many=True)
 
-        pkP_list = [i['id'] for i in serializer.data]
+            pkP_list = [i['id'] for i in serializer.data]
 
-        r_list = []
-        for pkP in pkP_list: 
-            r = requests.get(f'http://localhost:3000/api/discounts/{pkP}/{pk}').json()
-            produto = list(produtos.filter(pk=pkP).values())
-            produto.append(r)
-            produto_final = OrderedDict(produto[0], **produto[1])
-            r_list.append(produto_final)
+            r_list = []
+            for pkP in pkP_list: 
+                r = requests.get(f'http://localhost:3000/api/discounts/{pkP}/{pk}').json()
+                produto = list(produtos.filter(pk=pkP).values())
+                produto.append(r)
+                produto_final = OrderedDict(produto[0], **produto[1])
+                r_list.append(produto_final)
 
-        return Response(data=r_list, status=status.HTTP_200_OK)
+            return Response(data=r_list, status=status.HTTP_200_OK)
+        except ConnectionError:
+            content = {'error': 'Erro ao relizar requisição HTTP. Verifique a disponibilidade da API que está sendo utilizada.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
 
 """
 ##--------------- Descontos ---------------##
