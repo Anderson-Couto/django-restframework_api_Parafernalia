@@ -1,60 +1,50 @@
 [
     {
-        "id": 1,
         "first_name": "Usuario 1",
         "last_name": "Sobrenome 1",
         "birthdate": "1995-03-01"
     },
     {
-        "id": 2,
         "first_name": "Usuario 2",
         "last_name": "Sobrenome 2",
         "birthdate": "1977-07-22"
     },
     {
-        "id": 3,
         "first_name": "Usuario 3",
         "last_name": "Sobrenome 3",
         "birthdate": "1987-08-01"
     },
     {
-        "id": 4,
         "first_name": "Usuario 5",
         "last_name": "Sobrenome 5",
         "birthdate": "1960-10-24"
     },
     {
-        "id": 5,
         "first_name": "Usuario 6",
         "last_name": "Sobrenome 6",
         "birthdate": "1968-06-13"
     },
     {
-        "id": 6,
         "first_name": "Usuario 7",
         "last_name": "Sobrenome 7",
         "birthdate": "1996-05-11"
     },
     {
-        "id": 7,
         "first_name": "Usuario 8",
         "last_name": "Sobrenome 8",
         "birthdate": "2005-12-19"
     },
     {
-        "id": 8,
         "first_name": "Usuario 8",
         "last_name": "Sobrenome 8",
         "birthdate": "2001-04-25"
     },
     {
-        "id": 9,
         "first_name": "Usuario 9",
         "last_name": "Sobrenome 9",
         "birthdate": "1999-07-08"
     },
     {
-        "id": 10,
         "first_name": "Usuario 10",
         "last_name": "Sobrenome 10",
         "birthdate": "1992-10-28"

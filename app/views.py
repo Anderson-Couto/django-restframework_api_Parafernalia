@@ -1,16 +1,19 @@
+##--------------- Importações ---------------##
+## ==> Django
 from rest_framework.views import APIView
-from .models import Produtos, Usuarios
-from .serializers import ProdutosSerializer, UsuariosSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.db import IntegrityError
+## ==> Pastas da aplicação
+from .models import Produtos, Usuarios
+from .serializers import ProdutosSerializer, UsuariosSerializer
+## ==> Outras bibliotecas
+import requests
 from requests.exceptions import ConnectionError
 import json
 from datetime import date
-import requests
 from collections import OrderedDict
-
 
 ##--------------- Usuários ---------------##
 
@@ -38,9 +41,13 @@ class UsuariosRUD(APIView):
     serializer_class = UsuariosSerializer
     
     def get(self, request, pk):
-        users = Usuarios.objects.get(pk=pk)
-        serializer = self.serializer_class(users)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        try:
+            users = Usuarios.objects.get(pk=pk)
+            serializer = self.serializer_class(users)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            content = {'error': 'Usuário não encontrado. Verifique os dados e repita o processo.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk, format=None):
         users = Usuarios.objects.get(pk=pk)
@@ -121,6 +128,7 @@ class ProdutosDisc(APIView):
             r_list = []
             for pkP in pkP_list: 
                 r = requests.get(f'http://localhost:3000/api/discounts/{pkP}/{pk}').json()
+                #r = requests.get(f'http://localhost:8000/discounts/{pkP}/{pk}').json()
                 produto = list(produtos.filter(pk=pkP).values())
                 produto.append(r)
                 produto_final = OrderedDict(produto[0], **produto[1])
@@ -130,7 +138,11 @@ class ProdutosDisc(APIView):
         except ConnectionError:
             content = {'error': 'Erro ao relizar requisição HTTP. Verifique a disponibilidade da API que está sendo utilizada.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
+        except:
+            #content = {'error': 'Usuário não encontrado. Verifique os dados e repita o processo.'}
+            #return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            r = requests.get(f'http://localhost:8000/products/').json()
+            return Response(data=r, status=status.HTTP_200_OK)
 
 """
 ##--------------- Descontos ---------------##
