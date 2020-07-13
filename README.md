@@ -34,3 +34,7 @@ Com a virtualenv ativa e os pacotes instalados, digite:
 
 `python manage.py migrate`
 
+## Inserindo dados base no DB
+
+`python tools/db_insert.py`
+
